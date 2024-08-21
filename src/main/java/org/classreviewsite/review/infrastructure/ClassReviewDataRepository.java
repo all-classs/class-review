@@ -14,6 +14,8 @@ import java.util.Optional;
 @Repository
 public interface ClassReviewDataRepository extends JpaRepository<ClassReview, Long> {
 
+    @Query("select m from ClassReview m join fetch m.lecId join fetch m.userNumber")
+    List<ClassReview> findAll();
 
     Optional<ClassReview> findByUserNumberAndLecId(@Param("userNumber") User userNumber, @Param("lecId") Lecture lecId);
 
