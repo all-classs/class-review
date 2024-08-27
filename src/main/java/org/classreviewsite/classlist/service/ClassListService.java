@@ -1,18 +1,22 @@
 package org.classreviewsite.classlist.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.classreviewsite.auth.exception.LectureNotFoundException;
+import org.classreviewsite.classlist.dto.response.ClassListInfo;
 import org.classreviewsite.classlist.dto.response.ClassListWithProfessorName;
+import org.classreviewsite.classlist.dto.response.ProfessorDashboardInfo;
 import org.classreviewsite.classlist.infrastructure.ClassListDataRepository;
 import org.classreviewsite.classlist.data.ClassList;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ClassListService {
 
 
@@ -23,35 +27,29 @@ public class ClassListService {
         return classListDataRepository.findById(id).orElseThrow(() -> new NullPointerException("해당 클래스가 존재하지 않습니다."));
     }
 
-
     @Transactional(readOnly = true)
-    public List<ClassListWithProfessorName> findByClassListWithProfessorName(){
+    public List<ClassListInfo> findClassListByUniversity(String university){
 
-        List<ClassList> list = classListDataRepository.findByClassListWithProfessorName();
-
-        return ClassListWithProfessorName.from(list);
-
+            List<ClassList> list = classListDataRepository.findClassListByUniversity(university);
+            if(list.isEmpty()){
+                throw new NoSuchElementException("해당 학교의 강의가 존재하지 않습니다.");
+            }
+            return ClassListInfo.toList(list);
     }
+
+
+
 
     @Transactional(readOnly = true)
     public ClassListWithProfessorName.ClassListWithProfessorNameInDetail findByClassListWithProfessorNameInDetail(Long lectureId){
         ClassList classList = classListDataRepository.findByLectureIdWithProfessorName(lectureId).orElseThrow(() -> new LectureNotFoundException("해당 강의가 없습니다."));
-        return ClassListWithProfessorName.ClassListWithProfessorNameInDetail.builder()
-                .averageStarLating(classList.getLecture().getAverageStarLating())
-                .professor(classList.getProfessor().getProfessorName())
-                .lectureId(classList.getLecture().getLectureId())
-                .lectureName(classList.getLecture().getLectureName())
-                .lectureType(classList.getLecture().getLectureType())
-                .department(classList.getLecture().getDepartment())
-                .reviewCount(classList.getLecture().getReviewCount())
-                .totalStarLating(classList.getLecture().getTotalStarLating())
-                .university(classList.getLecture().getUniversity())
-                .introduction(classList.getClassIntroduction())
-                .imageUrl(classList.getCaptainImage().getImageUrl())
-                .classNumber(classList.getClassNumber())
-                .build();
+        return ClassListWithProfessorName.ClassListWithProfessorNameInDetail.from(classList);
     }
 
+    @Transactional(readOnly = true)
+    public List<ProfessorDashboardInfo> myPageWithProfessor(String professorName){
+        return ProfessorDashboardInfo.from(classListDataRepository.findClassListByProfessorName(professorName));
+    }
 
 
 
