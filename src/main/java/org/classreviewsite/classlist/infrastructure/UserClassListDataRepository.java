@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface UserClassListDataRepository extends JpaRepository<UserClassList, Long> {
 
-    Optional<UserClassList> findByUserNumber(@Param("userNumber") User userNumber);
+    Optional<List<UserClassList>> findByUserNumber(@Param("userNumber") User userNumber);
 
     @Query("select m from UserClassList m join fetch m.userNumber and join fetch m.classNumber where m.userNumber.userNumber = :userNumber")
     List<UserClassList> findByUserNumberWithClassAndUser(@Param("userNumber") int userNumber);
