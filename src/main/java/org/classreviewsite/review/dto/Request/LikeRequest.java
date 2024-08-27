@@ -1,14 +1,16 @@
 package org.classreviewsite.review.dto.Request;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Data
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class LikeRequest {
 
-    private Long userNumber;
+    private int userNumber;
 
-    private Long reviewId;
+    private Long postId;
 
 }
