@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.classreviewsite.auth.data.Authority;
+import org.classreviewsite.user.dto.CreateUserRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
 
@@ -41,4 +43,13 @@ public class User {
     )
     private Set<Authority> authorities;
 
+    public static User toEntity(CreateUserRequest user, String password){
+        return User.builder()
+                .userNumber(user.getUserNumber())
+                .userName(user.getUserName())
+                .department(user.getDepartment())
+                .nickname(user.getNickname())
+                .password(password)
+                .build();
+    }
 }
