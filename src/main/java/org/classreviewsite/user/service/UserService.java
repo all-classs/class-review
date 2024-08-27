@@ -3,7 +3,6 @@ package org.classreviewsite.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.classreviewsite.user.dto.CreateUserRequest;
-import org.classreviewsite.user.dto.CreateUserResponse;
 import org.classreviewsite.user.data.User;
 import org.classreviewsite.auth.exception.UserExistException;
 import org.classreviewsite.user.infrastructure.UserDataRepository;
@@ -29,22 +28,14 @@ public class UserService {
 
 
     @Transactional
-    public CreateUserResponse signUp(CreateUserRequest user){
+    public void signUp(CreateUserRequest user){
 
         validateDuplicateUser(user);
 
-        User savedUser = User.builder()
-            .userNumber(user.getUserNumber())
-            .userName(user.getUserName())
-            .department(user.getDepartment())
-            .nickname(user.getNickname())
-            .password(passwordEncoder.encode(user.getPassword()))
-            .build();
+        String password = passwordEncoder.encode(user.getPassword());
 
+        userDataRepository.save(User.toEntity(user, password));
 
-        userDataRepository.save(savedUser);
-
-        return new CreateUserResponse(200, savedUser, "회원가입이 완료되었습니다.");
     }
 
 
