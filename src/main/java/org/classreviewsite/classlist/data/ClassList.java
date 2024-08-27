@@ -33,8 +33,15 @@ public class ClassList {
     private Professor professor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "imageNumber", unique = false)
+    @JoinColumn(name = "captainImage", nullable = false)
     private ImageUrl captainImage;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "icon", nullable = false)
+    private ImageUrl icon;
+
+    @Column(nullable = false)
+    private boolean opened;
 
 
 
