@@ -32,14 +32,10 @@ public class ControllerAdvice {
 
 
     @ExceptionHandler(value = NoSuchElementException.class)
-    protected Result noSuchElementExceptionHandler(NoSuchElementException exception){
+    protected Result NoSuchElementExceptionHandler(NoSuchElementException exception){
         return new Result(401, null, exception.getMessage());
     }
 
-    @ExceptionHandler(value = InValidTokenException.class)
-    protected Result inValidTokenException(InValidTokenException exception){
-        return new Result(402, null, exception.getMessage());
-    }
 
     @ExceptionHandler(value = UserNotFoundException.class)
     protected Result UserNotFoundException(UserNotFoundException exception){
@@ -71,10 +67,6 @@ public class ControllerAdvice {
         return new Result(202, null, exception.getMessage());
     }
 
-    @ExceptionHandler(value = MalformedJwtException.class)
-    protected Result MalformedJwtException(MalformedJwtException exception){
-        return new Result(401, null, "토큰이 유효하지 않습니다.");
-    }
 
     @ExceptionHandler(value = AlreadyWritePostException.class)
     protected Result AlreadyWritePostException(AlreadyWritePostException exception){
@@ -91,10 +83,6 @@ public class ControllerAdvice {
         return new Result(202, null, exception.getMessage());
     }
 
-    @ExceptionHandler(value = HttpClientErrorException.Unauthorized.class)
-    protected Result UnauthorizedException(HttpClientErrorException.Unauthorized exception){
-        return new Result(401, null, "인증을 실패하였습니다.");
-    }
 
 
 }
