@@ -7,16 +7,15 @@ import lombok.Data;
 @AllArgsConstructor
 public class LoginUserResponse {
 
-    private int status;
-
     private String name;
 
     private String token;
 
-    private String message;
+    private String userKey;
 
-    public static LoginUserResponse of(int status, String name , String token, String message){
-        return new LoginUserResponse(status, name, token, message);
+
+    public static LoginUserResponse of( String name , String token , String userKey){
+        return new LoginUserResponse( name, token, userKey);
     }
 
 }
