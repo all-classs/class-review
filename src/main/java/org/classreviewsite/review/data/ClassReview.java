@@ -14,7 +14,6 @@ import org.classreviewsite.user.data.User;
 @Builder
 @Getter
 @Entity
-@Table(name = "ClassReview", uniqueConstraints = @UniqueConstraint(columnNames = {"lecId", "userNumber"}))
 public class ClassReview extends BaseTimeEntity {
 
     @Id
@@ -25,7 +24,7 @@ public class ClassReview extends BaseTimeEntity {
     @JoinColumn(name = "lecId", nullable = false, unique = false)
     private Lecture lecId;
 
-    @Column(nullable = false, length = 45, unique = false)
+    @Column(nullable = false, length = 255, unique = false)
     private String postTitle;
 
     @Column(nullable = false, unique = false)
@@ -38,24 +37,35 @@ public class ClassReview extends BaseTimeEntity {
     @Column(nullable = false, length = 255, unique = false)
     private String postContent;
 
-    @Column(nullable = false, length = 45, unique = false)
-    private Integer likes;
+    @Column(nullable = false)
+    private int likes;
+
+    @Column(nullable = false)
+    private Long important;
+
+    @Column(nullable = false)
+    private Long difficulty;
+
+    @Column(nullable = false)
+    private Long funny;
 
 
 
     /**
      * 좋아요
      */
-    public void like(){
+    public int like(){
         this.likes += 1;
+        return this.likes;
     }
 
     /**
      * 좋아요 취소
      *
      */
-    public void cancelLike(){
-        this.likes -= 1;
+    public int cancelLike(int like){
+        this.likes = like;
+        return this.likes;
     }
 
     /**
