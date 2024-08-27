@@ -6,6 +6,7 @@ import org.classreviewsite.auth.jwt.JwtAccessDeniedHandler;
 import org.classreviewsite.auth.jwt.JwtAuthenticationEntryPoint;
 import org.classreviewsite.auth.jwt.JwtSecurityConfig;
 import org.classreviewsite.auth.jwt.JwtTokenProvider;
+import org.classreviewsite.auth.service.AuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -51,7 +52,11 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 )
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers("/**" ).permitAll()
+//                        .requestMatchers( "/**").permitAll()
+                        .requestMatchers(("/review")).permitAll()
+                        .requestMatchers("/signin", "signup","/department", "/class/**" ).permitAll()
+                        .requestMatchers("/", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
