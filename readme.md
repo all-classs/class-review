@@ -14,6 +14,7 @@
 
 ### Swagger
 
+* localhost:8000/swagger-ui/index.html 접속 후 사용
 
 ### API 구조
 
