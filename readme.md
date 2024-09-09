@@ -17,7 +17,7 @@
 
 ### API 구조
 
-![img.png](img.png)
+![image](https://github.com/user-attachments/assets/ee5e16c7-d28f-4531-b729-94dbb8beceea)
 
 ### 구현 및 추가 설명
 
