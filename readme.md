@@ -2,7 +2,7 @@
 > 수업리뷰사이트 api를 serving합니다.
 
 ### Skills
-* Java
+* Java 17
 * Spring Boot
 * MySql
 
