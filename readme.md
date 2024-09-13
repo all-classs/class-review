@@ -7,7 +7,11 @@
 * MySql
 
 ### Naming
-
+* Lecture : 강의 고유 정보
+* ClassList : 개설된 강의
+* User : 사용자 (학생, 교수)
+* Review : 수강후기
+* Auth : 인증
 
 ### Features
 
