@@ -1,6 +1,6 @@
 <div align="center">
     
-    <img src = "https://raw.githubusercontent.com/UbSE-lab/class-review-site-server/refs/heads/main/images/Logo_Blue2.png" width = "300" height = "300">
+    ![image](https://raw.githubusercontent.com/UbSE-lab/class-review-site-server/refs/heads/main/images/Logo_Blue2.png)
     
 </div>
 
