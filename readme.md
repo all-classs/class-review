@@ -46,6 +46,10 @@
 
 ![image](https://github.com/user-attachments/assets/ee5e16c7-d28f-4531-b729-94dbb8beceea)
 
+### DataModel
+
+![datamodel](https://raw.githubusercontent.com/UbSE-lab/class-review-site-server/refs/heads/main/images/datamodel.png)
+
 ### 구현 및 추가 설명
 
 - API 서버 코드 작성 후 배포 및 리팩토링
