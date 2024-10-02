@@ -1,6 +1,6 @@
 <div align="center">
     
-    ![SLR로고](./images/Logo_Blue2.png)
+    ![로고](./images/Logo_Blue2.png)
     
 </div>
 
