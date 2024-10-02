@@ -50,6 +50,11 @@
 
 ![datamodel](https://raw.githubusercontent.com/UbSE-lab/class-review-site-server/refs/heads/main/images/datamodel.png)
 
+### System Architecture
+
+![architecture](![image](https://github.com/user-attachments/assets/0e5ffb83-0046-41a0-9feb-7139200d9389)
+
+
 ### 구현 및 추가 설명
 
 - API 서버 코드 작성 후 배포 및 리팩토링
