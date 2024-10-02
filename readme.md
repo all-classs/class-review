@@ -62,5 +62,5 @@
 
 ### 리팩토링 과정 설명글
 
-- ![부산 ICT 해커톤 회고 링크](https://1nmybrain.tistory.com/54)
+- [부산 ICT 해커톤 회고 링크](https://1nmybrain.tistory.com/54)
   
