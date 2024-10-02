@@ -1,6 +1,6 @@
 <div align="center">
     
-    ![SLR로고](https://raw.githubusercontent.com/UbSE-lab/class-review-site-server/refs/heads/main/images/Logo_Blue2%201.png)
+    ![SLR로고](./images/Logo_Blue2 1.png)
     
 </div>
 
