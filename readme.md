@@ -1,5 +1,11 @@
+<div align="center">
+    ![SLR로고](https://raw.githubusercontent.com/UbSE-lab/class-review-site-server/refs/heads/main/images/Logo_Blue2%201.png)
+</div>
+
+---
+
 ## Class Review Site Server
-> 수업리뷰사이트 api를 serving합니다.
+> 수업 리뷰 사이트는 대학생들이 직접 들은 수업을 바탕으로 리뷰를 작성하고 공유하는 시스템입니다.
 
 ### Skills
 * Java 17
