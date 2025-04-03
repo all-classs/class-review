@@ -1,5 +1,7 @@
 package org.classreviewsite.classlist.infrastructure;
 
+import org.classreviewsite.classlist.data.ClassList;
+import org.classreviewsite.lecture.data.Lecture;
 import org.classreviewsite.user.data.User;
 import org.classreviewsite.classlist.data.UserClassList;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +17,9 @@ public interface UserClassListDataRepository extends JpaRepository<UserClassList
 
     Optional<List<UserClassList>> findByUserNumber(@Param("userNumber") User userNumber);
 
-    @Query("select m from UserClassList m join fetch m.userNumber and join fetch m.classNumber where m.userNumber.userNumber = :userNumber")
+    Optional<UserClassList> findByUserNumberAndLecture(@Param("userNumber") User userNumber, @Param("lecture") Lecture lectureNumber);
+
+    @Query("select m from UserClassList m join fetch m.userNumber and join fetch m.lecture where m.userNumber.userNumber = :userNumber")
     List<UserClassList> findByUserNumberWithClassAndUser(@Param("userNumber") int userNumber);
 
 
