@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.classreviewsite.auth.data.Authority;
 import org.classreviewsite.user.dto.CreateUserRequest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
 import java.util.Set;
 
 @NoArgsConstructor
