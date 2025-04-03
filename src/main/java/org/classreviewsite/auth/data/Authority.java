@@ -18,4 +18,9 @@ public class Authority {
     @Column(name = "authority" , length = 50)
     private String authority;
 
+    public static Authority toEntity(String type){
+        return Authority.builder()
+                .authority(type)
+                .build();
+    }
 }
