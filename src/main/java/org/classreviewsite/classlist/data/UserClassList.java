@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.classreviewsite.lecture.data.Lecture;
 import org.classreviewsite.user.data.User;
 
 @NoArgsConstructor
@@ -12,7 +13,7 @@ import org.classreviewsite.user.data.User;
 @Builder
 @Getter
 @Entity
-@Table(name = "UserClassList", uniqueConstraints = @UniqueConstraint(columnNames = {"classNumber", "userNumber"}))
+@Table(name = "UserClassList")
 public class UserClassList {
 
     // 수강한 고유 번호
@@ -43,8 +44,11 @@ public class UserClassList {
 
     // 어떤 교과목
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "classNumber")
-    private ClassList classNumber;
+    @JoinColumn(nullable = false)
+    private Lecture lecture;
+
+    @Column(nullable = true, length = 45, unique = false)
+    private String professor;
 
 
 }
