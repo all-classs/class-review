@@ -46,16 +46,9 @@ public class UserController {
     @ApiResponse(responseCode = "401", description = "학번은 8자리입니다.")
     @ApiResponse(responseCode = "401", description = "아이디 및 비밀번호를 확인해주세요")
     public Result signIn(@Parameter(required = true, description = "학번, 비밀번호 요청") @RequestBody LoginUserRequest dto, HttpServletResponse response){
-        log.info("password: {}", passwordEncoder.encode(dto.getPassword()));
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUserNumber(), dto.getPassword());
-
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-//        log.info("인증: {}", authentication);
-//        log.info("로그인: {}", authentication.getName());
-        log.info("로그인2: {}", authentication.getAuthorities());
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtTokenProvider.createToken(authentication);
@@ -67,11 +60,10 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    @Operation(summary = "회원가입 요청", description = "회원가입을 요청합니다.")
+    @Operation(summary = "회원가입 요청", description = "회원가입을 요청합니다. userType : 'STUDENT' , 'PROFESSOR' 중에 하나 주시면 처리하도록 하겠습니다.")
     @ApiResponse(responseCode = "200", description = "회원가입이 완료되었습니다.")
     @ApiResponse(responseCode = "204", description = "이미 존재하는 학생입니다.")
     public Result signUp( @RequestBody CreateUserRequest dto){
-        log.info("회원가입: {}" , dto);
         userService.signUp(dto);
         return new Result<>(200, dto, "회원가입이 완료되었습니다.");
     }
