@@ -39,7 +39,7 @@ public class UserClassListService {
             throw new UserNotFoundException("해당 학생이 수강한 강의는 없습니다.");
         }
 
-        return UserClassListResponse.toList(list);
+        return list.stream().map(UserClassListResponse::from).toList();
 
     }
 
@@ -50,6 +50,15 @@ public class UserClassListService {
         List<UserClassList> list = userClassListDataRepository.findByUserNumber(user).orElseThrow(() -> new ClassNotFoundException("해당 학생이 수강한 강의가 없습니다."));
 
         return MyPageStudentInfo.from(list);
+    }
+
+    @Transactional(readOnly = true)
+    public UserClassList findByUserNumber(int userNumber, String lectureName){
+        User user = userService.findById(Long.valueOf(userNumber));
+        Lecture lecture = lectureService.findByLectureName(lectureName);
+        UserClassList list = userClassListDataRepository.findByUserNumberAndLecture(user, lecture).orElseThrow(() -> new NoPermissionReviewException(""));
+        System.out.println(list.getUserNumber());
+        return list;
     }
 
 
