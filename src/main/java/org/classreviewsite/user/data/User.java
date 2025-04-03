@@ -43,12 +43,13 @@ public class User {
     )
     private Set<Authority> authorities;
 
-    public static User toEntity(CreateUserRequest user, String password){
+    public static User toEntity(CreateUserRequest user, String password, Authority authority){
         return User.builder()
                 .userNumber(user.getUserNumber())
                 .userName(user.getUserName())
                 .department(user.getDepartment())
                 .nickname(user.getNickname())
+                .authorities(Collections.singleton(authority))
                 .password(password)
                 .build();
     }
