@@ -45,7 +45,7 @@ public class UserClassListService {
 
     @Transactional(readOnly = true)
     public List<MyPageStudentInfo> myPageWithStudent(int userNumber){
-        User user = userService.findById(Long.valueOf(userNumber)).orElseThrow(() -> new UserNotFoundException("해당 학생을 찾을 수 없습니다."));
+        User user = userService.findById(Long.valueOf(userNumber));
 
         List<UserClassList> list = userClassListDataRepository.findByUserNumber(user).orElseThrow(() -> new ClassNotFoundException("해당 학생이 수강한 강의가 없습니다."));
 
