@@ -2,18 +2,18 @@ package org.classreviewsite.classlist.service;
 
 import lombok.RequiredArgsConstructor;
 import org.classreviewsite.auth.exception.ClassNotFoundException;
+import org.classreviewsite.auth.exception.NoPermissionReviewException;
 import org.classreviewsite.auth.exception.UserNotFoundException;
 import org.classreviewsite.classlist.dto.response.MyPageStudentInfo;
 import org.classreviewsite.classlist.dto.response.UserClassListResponse;
 import org.classreviewsite.classlist.infrastructure.UserClassListDataRepository;
+import org.classreviewsite.lecture.data.Lecture;
+import org.classreviewsite.lecture.service.LectureService;
 import org.classreviewsite.user.data.User;
 import org.classreviewsite.classlist.data.UserClassList;
-import org.classreviewsite.user.infrastructure.UserDataRepository;
 import org.classreviewsite.user.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +24,7 @@ public class UserClassListService {
     private final UserClassListDataRepository userClassListDataRepository;
 
     private final UserService userService;
+    private final LectureService lectureService;
 
 
     @Transactional
