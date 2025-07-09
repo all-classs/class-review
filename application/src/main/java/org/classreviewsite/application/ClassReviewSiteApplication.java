@@ -1,4 +1,4 @@
-package org.classreviewsite.domain;
+package org.classreviewsite.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

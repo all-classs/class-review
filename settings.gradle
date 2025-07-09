@@ -1,50 +1,6 @@
 
-import java.nio.file.*
-import java.nio.file.attribute.BasicFileAttributes
-
 rootProject.name = 'classreviewsite'
-enableFeaturePreview('TYPESAFE_PROJECT_ACCESSORS')
 
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-    }
-}
-
-def includeModule() {
-    def entryPointName = 'modules'
-    def entryPoint = rootDir.toPath().resolve(entryPointName)
-    def foundBuildScriptPaths = []
-
-    Files.walkFileTree(entryPoint, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
-        @Override
-        FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-            if (file.fileName.toString() == 'build.gradle') {
-                foundBuildScriptPaths.add(file.toAbsolutePath())
-            }
-            return FileVisitResult.CONTINUE
-        }
-
-        @Override
-        FileVisitResult visitFileFailed(Path file, IOException exc) {
-            println "Error accessing file: $file - ${exc.message}"
-            return FileVisitResult.CONTINUE
-        }
-    })
-
-    def modules = foundBuildScriptPaths
-            .collect { it.parent.toAbsolutePath().toString() }
-            .collect { it.replace(rootDir.toPath().toString() + File.separator, '') }
-            .collect { it.replace(File.separator, ':') }
-
-    include(*modules as String[])
-
-    def moduleGroups = Files.list(entryPoint)
-            .map { it.fileName.toString() }
-            .map { "$entryPointName:$it" }
-            .toList()
-
-    include(*moduleGroups as String[])
-}
-
-includeModule()
+include 'application'
+//include 'domain'
+//include 'internal'
