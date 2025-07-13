@@ -13,14 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- *
- * BadCredentialException : 자격 증명이 없습니다. -> username을 확인해야되는데 email을 확인하는 오류
- * 코드는 끝까지 따라쳐라
- * 메서드 파헤치다가 안보이면 소스 다운받기 누르면 설명도 추가됨
- * 에러 해결 : https://yoonsys.tistory.com/33
- */
-
 @Component("userDetailService")
 public class CustomUserDetailsService implements UserDetailsService {
 

@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.classreviewsite.auth.data.Authority;
 import org.classreviewsite.user.dto.CreateUserRequest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -43,12 +43,13 @@ public class User {
     )
     private Set<Authority> authorities;
 
-    public static User toEntity(CreateUserRequest user, String password){
+    public static User toEntity(CreateUserRequest user, String password, Authority authority){
         return User.builder()
                 .userNumber(user.getUserNumber())
                 .userName(user.getUserName())
                 .department(user.getDepartment())
                 .nickname(user.getNickname())
+                .authorities(Collections.singleton(authority))
                 .password(password)
                 .build();
     }
