@@ -2,9 +2,11 @@ package org.classreviewsite.review.dto.Request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class DeleteReviewRequest {
     private Long postId;
 

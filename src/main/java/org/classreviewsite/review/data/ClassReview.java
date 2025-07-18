@@ -28,7 +28,7 @@ public class ClassReview extends BaseTimeEntity {
     private String postTitle;
 
     @Column(nullable = false, unique = false)
-    private Long starLating;
+    private Double starLating;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userNumber" , nullable = false, unique = false)
@@ -40,42 +40,32 @@ public class ClassReview extends BaseTimeEntity {
     @Column(nullable = false)
     private int likes;
 
-    @Column(nullable = false)
-    private Long important;
-
-    @Column(nullable = false)
-    private Long difficulty;
-
-    @Column(nullable = false)
-    private Long funny;
-
-
-
-    /**
-     * 좋아요
-     */
     public int like(){
         this.likes += 1;
         return this.likes;
     }
 
-    /**
-     * 좋아요 취소
-     *
-     */
-    public int cancelLike(int like){
+    public int like(int like){
         this.likes = like;
         return this.likes;
     }
 
-    /**
-     * 글 수정
-     */
-    public void updatePost(String postTitle, String postContent){
+    public void update(String postTitle, String postContent, Double starLating, Long important, Long difficulty, Long funny){
         this.postTitle = postTitle;
         this.postContent = postContent;
+        this.starLating = starLating;
     }
 
+    public static ClassReview create(Lecture lecture, User user, Double starLating, int likes, String postContent, String postTitle){
+        return ClassReview.builder()
+                .lecId(lecture)
+                .userNumber(user)
+                .starLating(starLating)
+                .likes(likes)
+                .postTitle(postTitle)
+                .postContent(postContent)
+                .build();
+    }
 
 
 }

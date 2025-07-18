@@ -1,22 +1,14 @@
 package org.classreviewsite.auth.handler;
 
-import io.jsonwebtoken.MalformedJwtException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
-import org.apache.logging.log4j.message.ReusableMessage;
 import org.classreviewsite.auth.exception.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
-
 import java.lang.ClassNotFoundException;
-import java.util.HashMap;
 import java.util.NoSuchElementException;
 
-import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 @Slf4j
@@ -83,6 +75,26 @@ public class ControllerAdvice {
         return new Result(202, null, exception.getMessage());
     }
 
+    @ExceptionHandler(value = SecurityException.class)
+    protected Result SecurityException(SecurityException exception){
+        return new Result(401, null, exception.getMessage());
+    }
+
+
+    @ExceptionHandler(value = JwtNotValidException.class)
+    protected Result JwtNotValidException(JwtNotValidException exception){
+        return new Result(401, null, exception.getMessage());
+    }
+
+    @ExceptionHandler(value = UpdateFailedException.class)
+    protected Result UpdateFailedException(UpdateFailedException exception){
+        return new Result(500, null, exception.getMessage());
+    }
+
+    @ExceptionHandler(value = NoPermissionReviewException.class)
+    protected Result NoPermissionReviewException(NoPermissionReviewException exception){
+        return new Result(403, null, "수강하지 않은 강의입니다.");
+    }
 
 
 }
