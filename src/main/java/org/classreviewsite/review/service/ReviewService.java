@@ -15,7 +15,6 @@ import org.classreviewsite.lecture.service.LectureService;
 import org.classreviewsite.review.dto.Request.LikeRequest;
 import org.classreviewsite.review.dto.Request.ClassReviewRequest;
 import org.classreviewsite.review.dto.Request.UpdateReviewRequest;
-import org.classreviewsite.review.infrastructure.LikesDataRepository;
 import org.classreviewsite.review.infrastructure.ClassReviewDataRepository;
 import org.classreviewsite.user.service.UserService;
 import org.springframework.stereotype.Service;
@@ -28,8 +27,6 @@ import java.util.List;
 public class ReviewService {
 
     private final ClassReviewDataRepository classReviewDataRepository;
-
-    private final LikesDataRepository likesDataRepository;
 
     private final LectureService lectureService;
 
@@ -45,57 +42,38 @@ public class ReviewService {
         return ReviewInfo.toList(list);
     }
 
-
-
     @Transactional
-    public Long addReviewPost(ClassReviewRequest request){
+    public void addReviewPost(ClassReviewRequest request){
 
-        Lecture foundLecture = lectureService.findBylectureName(request.getLectureName());
+        noPermissionCheck(request.getUserNumber().intValue(), request.getLectureName()); // 수강한 강의인지 확인
 
-        User foundUser = userService.findById(request.getUserNumber()).orElseThrow(() -> new UserNotFoundException("존재하지 않는 학생입니다."));
+        Lecture foundLecture = lectureService.findByLectureName(request.getLectureName());
 
-        ClassReview classReview = ClassReview.builder()
-                .lecId(foundLecture)
-                .userNumber(foundUser)
-                .starLating(request.getStarLating())
-                .likes(0)
-                .postTitle(request.getPostTitle())
-                .postContent(request.getPostContent())
-                .important(request.getImportant())
-                .difficulty(request.getDifficulty())
-                .funny(request.getFunny())
-                .build();
+        User foundUser = userService.findById(request.getUserNumber());
 
-        validateAddReviewPost(foundUser, foundLecture);
+        ClassReview classReview = ClassReview.create(
+                foundLecture,
+                foundUser,
+                request.getStarLating(),
+                0,
+                request.getPostContent(),
+                request.getPostTitle()
+        );
 
-        Long id = classReviewDataRepository.save(classReview).getReviewId();
+        validateCheckPost(foundUser, foundLecture);
 
-        Double funny = lectureService.updateFunnyAsPlus(foundLecture, classReview);
-        Double difficulty = lectureService.updateDifficultyAsPlus(foundLecture, classReview);
-        Double important = lectureService.updateImportantAsPlus(foundLecture, classReview);
-        Double total = funny+difficulty+important;
+        classReviewDataRepository.save(classReview);
 
+    }
 
-
-        Long count = lectureService.addReviewCount(foundLecture);
-        Long star = lectureService.updateTotalStarLating(foundLecture, request.getStarLating());
-        Long result =  lectureService.updateAverageStarLating(foundLecture, star, count);
-
-        if(foundLecture.getReviewCount()>0){
-            lectureService.updateFunnyNormalization(foundLecture, funny/total);
-            lectureService.updateDifficultyNormalization(foundLecture, difficulty/total);
-            lectureService.updateImportNormalization(foundLecture, important/total);
-        }
-
-        return id;
-
-
+    @Transactional(readOnly = true)
+    public void noPermissionCheck(int userNumber, String lectureName) {
+        userClassListService.findByUserNumber(userNumber, lectureName);
     }
 
 
     @Transactional(readOnly = true)
-    public void validateAddReviewPost(User user, Lecture lecture){
-
+    public void validateCheckPost(User user, Lecture lecture){
        classReviewDataRepository.findByUserNumberAndLecId(user, lecture)
                .ifPresent(m -> {
                    throw new AlreadyWritePostException("이미 작성한 강의입니다.");
