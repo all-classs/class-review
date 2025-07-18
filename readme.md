@@ -1,4 +1,4 @@
-CLASS-REVIEW 서버 구조도
+AllClass 서버 구조도
 ---
 
 
