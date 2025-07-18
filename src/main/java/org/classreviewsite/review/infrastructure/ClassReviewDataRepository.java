@@ -19,21 +19,24 @@ public interface ClassReviewDataRepository extends JpaRepository<ClassReview, Lo
 
     Optional<ClassReview> findByUserNumberAndLecId(@Param("userNumber") User userNumber, @Param("lecId") Lecture lecId);
 
+    List<ClassReview> findAllByLecIdOrderByStarLatingDesc(Lecture lecId);
 
-    @Query("select m from ClassReview m where m.lecId = :lecId order by m.likes desc limit 3")
-    List<ClassReview> findByLecIdOrderByLikesDesc(Long lecId );
+    List<ClassReview> findAllByLecIdOrderByStarLatingAsc(Lecture lecId);
+
+    List<ClassReview> findAllByLecIdOrderByLikesDesc(Lecture lecId );
+
+    List<ClassReview> findAllByLecIdOrderByLikesAsc(Lecture lecId);
+
+    List<ClassReview> findAllByLecIdOrderByCreatedDateDesc(Lecture lecId);
 
 
-    @Query("select m from ClassReview m where m.userNumber.userNumber = :userNumber")
+    @Query("select m from ClassReview m join fetch m.lecId join fetch m.userNumber where m.userNumber.userNumber = :userNumber")
     List<ClassReview> findByUserNumber(@Param("userNumber") int userNumber);
 
-
-    List<ClassReview> findByLecId(@Param("LectureId") Lecture lecId);
-
+    List<ClassReview> findByLecId(@Param("lecId") Lecture lecId);
 
     Optional<ClassReview> findByReviewIdAndUserNumber(Long reviewId, User userNumber);
 
-
-
+    List<ClassReview> findAllByUserNumber(User userNumber);
 
 }
