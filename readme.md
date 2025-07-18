@@ -1,4 +1,4 @@
-AllClass 서버 구조도
+all-class 서버 구조도
 ---
 
 
