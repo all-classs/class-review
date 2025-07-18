@@ -40,20 +40,6 @@ public class ClassReview extends BaseTimeEntity {
     @Column(nullable = false)
     private int likes;
 
-    @Column(nullable = false)
-    private Long important;
-
-    @Column(nullable = false)
-    private Long difficulty;
-
-    @Column(nullable = false)
-    private Long funny;
-
-
-
-    /**
-     * 좋아요
-     */
     public int like(){
         this.likes += 1;
         return this.likes;
