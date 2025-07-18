@@ -5,12 +5,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.classreviewsite.auth.jwt.JwtTokenProvider;
-import org.classreviewsite.auth.service.AuthService;
+import org.classreviewsite.common.Result;
 import org.classreviewsite.user.service.UserService;
 import org.classreviewsite.user.dto.CreateUserRequest;
 import org.classreviewsite.user.dto.LoginUserRequest;
@@ -19,7 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +34,6 @@ public class UserController {
    private final UserService userService;
    private final JwtTokenProvider jwtTokenProvider;
    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-   private final PasswordEncoder passwordEncoder;
 
 
     @PostMapping("/signin")
@@ -67,16 +63,6 @@ public class UserController {
         userService.signUp(dto);
         return new Result<>(200, dto, "회원가입이 완료되었습니다.");
     }
-
-    @Data
-    @AllArgsConstructor
-    class Result<T>{
-        private int status;
-        private T data;
-        private String message;
-    }
-
-
 
 
 }

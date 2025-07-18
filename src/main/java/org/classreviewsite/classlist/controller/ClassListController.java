@@ -11,6 +11,7 @@ import org.classreviewsite.classlist.dto.response.ClassListWithProfessorName;
 import org.classreviewsite.classlist.dto.response.UserClassListResponse;
 import org.classreviewsite.classlist.service.ClassListService;
 import org.classreviewsite.classlist.service.UserClassListService;
+import org.classreviewsite.common.Result;
 import org.classreviewsite.lecture.dto.DepartmentResponse;
 import org.classreviewsite.lecture.service.LectureService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +26,7 @@ import java.util.List;
 public class ClassListController {
 
     private final UserClassListService userClassListService;
-
     private final ClassListService classListService;
-
     private final LectureService lectureService;
 
     @GetMapping("/class")
@@ -37,11 +36,11 @@ public class ClassListController {
     public Result findClassList(@RequestParam(value = "university") String university, @RequestParam(value = "lectureId", required = false) Long lectureId){
 
         if(lectureId==null){
-            List<ClassListInfo> response = classListService.findClassListByUniversity(university);
+            List<ClassListInfo> response = classListService.getByUniversity(university);
             return new Result(200, response, "전체 강의 목록입니다.");
         }
 
-        ClassListWithProfessorName.ClassListWithProfessorNameInDetail response = classListService.findByClassListWithProfessorNameInDetail(lectureId);
+        ClassListWithProfessorName.ClassListWithProfessorNameInDetail response = classListService.detail(lectureId);
         return new Result(200, response, "강의 상세 정보 조회입니다.");
     }
 
@@ -50,11 +49,15 @@ public class ClassListController {
     @ApiResponse(responseCode = "200", description = "해당 학생의 수강한 강의 목록입니다.")
     @ApiResponse(responseCode = "401", description = "해당 학생이 수강한 강의는 없습니다.")
     public Result findUserClassList(@RequestParam("userNumber") int userNumber){
-
         List<UserClassListResponse> response = userClassListService.findClassForSemester(userNumber);
-
         return new Result(200, response, "해당 학생의 수강한 강의 목록입니다.");
+    }
 
+    @GetMapping("/class/recommend")
+    @Operation(summary = "강의 무작위 추천 3개", description = "무작위로 3과목 강의를 추천합니다.")
+    @ApiResponse(responseCode = "200", description = "무작위 강의 3과목을 추천합니다.")
+    public Result findRecommendClass(@RequestParam("university") String university){
+        return new Result<>(200, classListService.getRecommend(university), "무작위 강의 추천입니다.");
     }
 
     @GetMapping("/department")
@@ -67,16 +70,4 @@ public class ClassListController {
     }
 
 
-
-    @Data
-    @AllArgsConstructor
-    class Result<T>{
-
-        private int status;
-
-        private T data;
-
-        private String message;
-
-    }
 }
