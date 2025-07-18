@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,24 @@ public class ReviewService {
     private final LectureService lectureService;
 
     private final UserService userService;
+
+    private final LikeService likeService;
+
+    private final UserClassListService userClassListService;
+
+    @Transactional(readOnly = true)
+    public ClassReview findById(Long id){
+        return classReviewDataRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 수강후기가 존재하지 않습니다."));
+    }
+
+    public ClassReview findByReviewIdAndUserNumber(Long reviewId, User userNumber){
+        return classReviewDataRepository.findByReviewIdAndUserNumber(reviewId, userNumber).orElseThrow(() -> new NullPointerException("해당 수강후기가 존재하지 않습니다."));
+    }
+
+    @Transactional
+    public void deleteById(Long id){
+        classReviewDataRepository.deleteById(id);
+    }
 
     @Transactional(readOnly = true)
     public List<ReviewInfo> findAll(Long lectureId){
@@ -185,15 +204,64 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public List<ClassReview> findByLecture(Long lecId){
+    public List<ReviewInfo> findByLectureIdOrderByStarLatingDesc(Long lectureId){
+        Lecture lecture = lectureService.findById(lectureId);
 
-        Lecture lecture = lectureService.findById(lecId);
-
-        List<ClassReview> list = classReviewDataRepository.findByLecId(lecture);
-        if(list.isEmpty()){
-            throw new ReviewNotFoundException("수강후기가 존재하지 않습니다.");
+        List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByStarLatingDesc(lecture);// desc
+        if(result.isEmpty()){
+            throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
         }
-        return list;
+        return result.stream().map(ReviewInfo::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewInfo> findByLectureIdOrderByStarLatingAsc(Long lectureId){
+        Lecture lecture = lectureService.findById(lectureId);
+
+        List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByStarLatingAsc(lecture);
+        if(result.isEmpty()){
+            throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
+        }
+        return result.stream().map(ReviewInfo::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewInfo> findByLectureIdOrderByLikesDesc(Long lectureId){
+        Lecture lecture = lectureService.findById(lectureId);
+        List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByLikesDesc(lecture);
+        if(result.isEmpty()){
+            throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
+        }
+
+        return result.stream().map(ReviewInfo::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewInfo> findByLectureIdOrderByLikesAsc(Long lectureId){
+        Lecture lecture = lectureService.findById(lectureId);
+        List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByLikesAsc(lecture);
+        if(result.isEmpty()){
+            throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
+        }
+        return result.stream().map(ReviewInfo::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewInfo> findByLectureIdOrderByCreateDateDesc(Long lectureId){
+        Lecture lecture = lectureService.findById(lectureId);
+        List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByCreatedDateDesc(lecture);
+        if(result.isEmpty()){
+            throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
+        }
+
+        return result.stream().map(ReviewInfo::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewInfo> getMyReviews(Long userNumber){
+        User user = userService.findById(userNumber);
+        List<ClassReview> list = classReviewDataRepository.findAllByUserNumber(user);
+        return list.stream().map(ReviewInfo::from).toList();
     }
 
 }
