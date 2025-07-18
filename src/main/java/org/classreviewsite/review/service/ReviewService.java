@@ -15,13 +15,13 @@ import org.classreviewsite.lecture.service.LectureService;
 import org.classreviewsite.review.dto.Request.LikeRequest;
 import org.classreviewsite.review.dto.Request.ClassReviewRequest;
 import org.classreviewsite.review.dto.Request.UpdateReviewRequest;
-import org.classreviewsite.review.infrastructure.LikesDataRepository;
 import org.classreviewsite.review.infrastructure.ClassReviewDataRepository;
 import org.classreviewsite.user.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -29,11 +29,27 @@ public class ReviewService {
 
     private final ClassReviewDataRepository classReviewDataRepository;
 
-    private final LikesDataRepository likesDataRepository;
-
     private final LectureService lectureService;
 
     private final UserService userService;
+
+    private final LikeService likeService;
+
+    private final UserClassListService userClassListService;
+
+    @Transactional(readOnly = true)
+    public ClassReview findById(Long id){
+        return classReviewDataRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 수강후기가 존재하지 않습니다."));
+    }
+
+    public ClassReview findByReviewIdAndUserNumber(Long reviewId, User userNumber){
+        return classReviewDataRepository.findByReviewIdAndUserNumber(reviewId, userNumber).orElseThrow(() -> new NullPointerException("해당 수강후기가 존재하지 않습니다."));
+    }
+
+    @Transactional
+    public void deleteById(Long id){
+        classReviewDataRepository.deleteById(id);
+    }
 
     @Transactional(readOnly = true)
     public List<ReviewInfo> findAll(Long lectureId){
@@ -45,57 +61,38 @@ public class ReviewService {
         return ReviewInfo.toList(list);
     }
 
-
-
     @Transactional
-    public Long addReviewPost(ClassReviewRequest request){
+    public void addReviewPost(ClassReviewRequest request){
 
-        Lecture foundLecture = lectureService.findBylectureName(request.getLectureName());
+        noPermissionCheck(request.getUserNumber().intValue(), request.getLectureName()); // 수강한 강의인지 확인
 
-        User foundUser = userService.findById(request.getUserNumber()).orElseThrow(() -> new UserNotFoundException("존재하지 않는 학생입니다."));
+        Lecture foundLecture = lectureService.findByLectureName(request.getLectureName());
 
-        ClassReview classReview = ClassReview.builder()
-                .lecId(foundLecture)
-                .userNumber(foundUser)
-                .starLating(request.getStarLating())
-                .likes(0)
-                .postTitle(request.getPostTitle())
-                .postContent(request.getPostContent())
-                .important(request.getImportant())
-                .difficulty(request.getDifficulty())
-                .funny(request.getFunny())
-                .build();
+        User foundUser = userService.findById(request.getUserNumber());
 
-        validateAddReviewPost(foundUser, foundLecture);
+        ClassReview classReview = ClassReview.create(
+                foundLecture,
+                foundUser,
+                request.getStarLating(),
+                0,
+                request.getPostContent(),
+                request.getPostTitle()
+        );
 
-        Long id = classReviewDataRepository.save(classReview).getReviewId();
+        validateCheckPost(foundUser, foundLecture);
 
-        Double funny = lectureService.updateFunnyAsPlus(foundLecture, classReview);
-        Double difficulty = lectureService.updateDifficultyAsPlus(foundLecture, classReview);
-        Double important = lectureService.updateImportantAsPlus(foundLecture, classReview);
-        Double total = funny+difficulty+important;
+        classReviewDataRepository.save(classReview);
 
+    }
 
-
-        Long count = lectureService.addReviewCount(foundLecture);
-        Long star = lectureService.updateTotalStarLating(foundLecture, request.getStarLating());
-        Long result =  lectureService.updateAverageStarLating(foundLecture, star, count);
-
-        if(foundLecture.getReviewCount()>0){
-            lectureService.updateFunnyNormalization(foundLecture, funny/total);
-            lectureService.updateDifficultyNormalization(foundLecture, difficulty/total);
-            lectureService.updateImportNormalization(foundLecture, important/total);
-        }
-
-        return id;
-
-
+    @Transactional(readOnly = true)
+    public void noPermissionCheck(int userNumber, String lectureName) {
+        userClassListService.findByUserNumber(userNumber, lectureName);
     }
 
 
     @Transactional(readOnly = true)
-    public void validateAddReviewPost(User user, Lecture lecture){
-
+    public void validateCheckPost(User user, Lecture lecture){
        classReviewDataRepository.findByUserNumberAndLecId(user, lecture)
                .ifPresent(m -> {
                    throw new AlreadyWritePostException("이미 작성한 강의입니다.");
@@ -207,15 +204,64 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public List<ClassReview> findByLecture(Long lecId){
+    public List<ReviewInfo> findByLectureIdOrderByStarLatingDesc(Long lectureId){
+        Lecture lecture = lectureService.findById(lectureId);
 
-        Lecture lecture = lectureService.findById(lecId);
-
-        List<ClassReview> list = classReviewDataRepository.findByLecId(lecture);
-        if(list.isEmpty()){
-            throw new ReviewNotFoundException("수강후기가 존재하지 않습니다.");
+        List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByStarLatingDesc(lecture);// desc
+        if(result.isEmpty()){
+            throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
         }
-        return list;
+        return result.stream().map(ReviewInfo::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewInfo> findByLectureIdOrderByStarLatingAsc(Long lectureId){
+        Lecture lecture = lectureService.findById(lectureId);
+
+        List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByStarLatingAsc(lecture);
+        if(result.isEmpty()){
+            throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
+        }
+        return result.stream().map(ReviewInfo::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewInfo> findByLectureIdOrderByLikesDesc(Long lectureId){
+        Lecture lecture = lectureService.findById(lectureId);
+        List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByLikesDesc(lecture);
+        if(result.isEmpty()){
+            throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
+        }
+
+        return result.stream().map(ReviewInfo::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewInfo> findByLectureIdOrderByLikesAsc(Long lectureId){
+        Lecture lecture = lectureService.findById(lectureId);
+        List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByLikesAsc(lecture);
+        if(result.isEmpty()){
+            throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
+        }
+        return result.stream().map(ReviewInfo::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewInfo> findByLectureIdOrderByCreateDateDesc(Long lectureId){
+        Lecture lecture = lectureService.findById(lectureId);
+        List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByCreatedDateDesc(lecture);
+        if(result.isEmpty()){
+            throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
+        }
+
+        return result.stream().map(ReviewInfo::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewInfo> getMyReviews(Long userNumber){
+        User user = userService.findById(userNumber);
+        List<ClassReview> list = classReviewDataRepository.findAllByUserNumber(user);
+        return list.stream().map(ReviewInfo::from).toList();
     }
 
 }
