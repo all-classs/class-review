@@ -3,10 +3,12 @@ package org.classreviewsite.review.dto.Request;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.classreviewsite.review.data.ClassReview;
 
 @Builder
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ClassReviewRequest {
     private String lectureName;
@@ -14,10 +16,6 @@ public class ClassReviewRequest {
     private Long starLating;
     private String postTitle;
     private String postContent;
-
-    private Long important;
-    private Long funny;
-    private Long difficulty;
 
     public static ClassReviewRequest from(ClassReview review){
         return new ClassReviewRequest(
