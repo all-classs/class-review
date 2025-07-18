@@ -1,6 +1,5 @@
 package org.classreviewsite.classlist.data;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +15,6 @@ import org.classreviewsite.lecture.data.Professor;
 @Entity
 @Table(name = "ClassList")
 public class ClassList {
-
     @Id
     @Column(nullable = false, length = 20, unique = true)
     private Long classNumber;
@@ -25,7 +23,7 @@ public class ClassList {
     private String classIntroduction;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lecId")
+    @JoinColumn(name = "lecId", nullable = false)
     private Lecture lecture;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,16 +31,9 @@ public class ClassList {
     private Professor professor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "captainImage", nullable = false)
-    private ImageUrl captainImage;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "icon", nullable = false)
     private ImageUrl icon;
 
     @Column(nullable = false)
     private boolean opened;
-
-
-
 }
