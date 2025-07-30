@@ -83,14 +83,13 @@ public class JwtTokenProvider implements InitializingBean {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            throw new SecurityException("잘못된 JWT 서명입니다.");
-//            request.setAttribute("exception", "잘못된 JWT 서명입니다.");
+            log.info("exception", "잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
-//            request.setAttribute("exception", "만료된 JWT 토큰입니다.");
+            log.info("exception", "만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
-//            request.setAttribute("exception", "지원되지 않는 JWT 토큰입니다.");
+            log.info("exception", "지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
-//            request.setAttribute("exception", "JWT 토큰이 잘못되었습니다.");
+            log.info("exception", "JWT 토큰이 잘못되었습니다.");
         }
         return false;
     }
