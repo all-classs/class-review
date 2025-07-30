@@ -22,7 +22,6 @@ public class UserClassListService {
 
 
     private final UserClassListDataRepository userClassListDataRepository;
-
     private final UserService userService;
     private final LectureService lectureService;
 
@@ -45,12 +44,12 @@ public class UserClassListService {
     }
 
     @Transactional(readOnly = true)
-    public List<MyPageStudentInfo> myPageWithStudent(int userNumber){
+    public List<MyPageStudentResponse> myPageWithStudent(int userNumber){
         User user = userService.findById(Long.valueOf(userNumber));
 
         List<UserClassList> list = userClassListDataRepository.findByUserNumber(user).orElseThrow(() -> new ClassNotFoundException("해당 학생이 수강한 강의가 없습니다."));
 
-        return MyPageStudentInfo.from(list);
+        return MyPageStudentResponse.from(list);
     }
 
     @Transactional(readOnly = true)
@@ -61,7 +60,5 @@ public class UserClassListService {
         System.out.println(list.getUserNumber());
         return list;
     }
-
-
 
 }

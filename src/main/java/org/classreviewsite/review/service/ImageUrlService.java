@@ -15,15 +15,13 @@ public class ImageUrlService {
 
     private final ImageUrlDataRepository imageUrlDataRepository;
 
-
-
-    public List<BannerInfo> imageRender(){
+    public List<BannerResponse> imageRender(){
         List<ImageUrl> list = imageUrlDataRepository.findByImageNameOrImageName("banner", "main-banner");
         if(list.isEmpty()){
             throw new NoSuchElementException("앗 배너를 찾지 못했어요.");
         }
 
-        return BannerInfo.toList(list);
+        return list.stream().map(BannerResponse::from).toList();
     }
 
 

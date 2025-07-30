@@ -36,20 +36,20 @@ public class ReviewController {
     ){
         if(lowness == true){
             log.info("별점 낮은 순");
-            List<ReviewInfo> response = reviewService.findByLectureIdOrderByStarLatingAsc(lectureId);
+            List<ReviewResponse> response = reviewService.findByLectureIdOrderByStarLatingAsc(lectureId);
             return new Result(200, response, "수강 후기 별점 낮은 순 조회입니다.");
         }else if(likes == true){
             log.info("좋아요 높은 순");
-            List<ReviewInfo> response = reviewService.findByLectureIdOrderByLikesDesc(lectureId);
+            List<ReviewResponse> response = reviewService.findByLectureIdOrderByLikesDesc(lectureId);
             return new Result(200, response, "수강 후기 좋아요 높은 순 조회입니다.");
         }else if(recent == true){
             log.info("날짜 최신순");
-            List<ReviewInfo> response = reviewService.findByLectureIdOrderByCreateDateDesc(lectureId);
+            List<ReviewResponse> response = reviewService.findByLectureIdOrderByCreateDateDesc(lectureId);
             return new Result(200, response, "수강 후기 날짜 최신순 조회입니다.");
         }
 
         log.info("별점 높은 순");
-        List<ReviewInfo> response = reviewService.findByLectureIdOrderByStarLatingDesc(lectureId);
+        List<ReviewResponse> response = reviewService.findByLectureIdOrderByStarLatingDesc(lectureId);
         return new Result(200, response, "수강 후기 별점 높은 순 조회입니다.");
     }
 

@@ -9,40 +9,26 @@ import org.classreviewsite.user.controller.data.response.UserResponse;
 
 @Data
 @AllArgsConstructor
-public class ReviewInfo {
+@Slf4j
+public class ReviewResponse {
 
     private Long postId;
-
     private String postTitle;
     private String postContent;
-    private Long starLating;
+    private Double starLating;
     private Integer likes;
     private String createDate;
-    private UserInfo user;
+    private UserResponse user;
 
-
-    public static List<ReviewInfo> toList(List<ClassReview> reviews){
-        List<ReviewInfo> list = new ArrayList<>();
-
-        for(ClassReview classReview: reviews){
-            list.add(
-                    ReviewInfo.from(classReview)
-            );
-        }
-
-        return list;
-    }
-
-
-    public static ReviewInfo from(ClassReview classReview){
-        return new ReviewInfo(
+    public static ReviewResponse from(ClassReview classReview){
+        return new ReviewResponse(
                 classReview.getReviewId(),
                 classReview.getPostTitle(),
                 classReview.getPostContent(),
-                classReview.getStarLating(),
+                NumberFormat.format(classReview.getStarLating()),
                 classReview.getLikes(),
-                "2024-01-01",
-                UserInfo.from(classReview.getUserNumber())
+                classReview.getCreatedDate().getYear()+"-"+classReview.getCreatedDate().getMonth().getValue()+"-"+classReview.getCreatedDate().getDayOfMonth(),
+                UserResponse.from(classReview.getUserNumber())
         );
     }
 

@@ -34,11 +34,11 @@ public class ClassListController {
     public Result findClassList(@RequestParam(value = "university") String university, @RequestParam(value = "lectureId", required = false) Long lectureId){
 
         if(lectureId==null){
-            List<ClassListInfo> response = classListService.getByUniversity(university);
+            List<ClassListResponse> response = classListService.getByUniversity(university);
             return new Result(200, response, "전체 강의 목록입니다.");
         }
 
-        ClassListWithProfessorName.ClassListWithProfessorNameInDetail response = classListService.detail(lectureId);
+        ClassListWithProfessorResponse.ClassListWithProfessorNameInDetail response = classListService.detail(lectureId);
         return new Result(200, response, "강의 상세 정보 조회입니다.");
     }
 

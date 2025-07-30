@@ -10,7 +10,8 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class MyPageStudentInfo {
+public class MyPageStudentResponse {
+
     //        private Long lectureId;
     private Long classNumber;
     private String lectureName;
@@ -20,19 +21,19 @@ public class MyPageStudentInfo {
     private LectureType lectureType;
     private String professor;
 
-        public static List<MyPageStudentInfo> from(List<UserClassList> classLists){
-            List<MyPageStudentInfo> list = new ArrayList<>();
+        public static List<MyPageStudentResponse> from(List<UserClassList> classLists){
+            List<MyPageStudentResponse> list = new ArrayList<>();
 
             for(UserClassList userClassList : classLists){
                 list.add(
-                        new MyPageStudentInfo(
-                                userClassList.getClassNumber().getClassNumber(),
-                                userClassList.getClassNumber().getLecture().getLectureName(),
+                        new MyPageStudentResponse(
+                                userClassList.getLecture().getLectureId(),
+                                userClassList.getLecture().getLectureName(),
                                 userClassList.getCompletionYear(),
                                 userClassList.getGrade(),
                                 userClassList.getSemester(),
-                                userClassList.getClassNumber().getLecture().getLectureType(),
-                                userClassList.getClassNumber().getProfessor().getProfessorName()
+                                userClassList.getLecture().getLectureType(),
+                                userClassList.getProfessor()
                         )
                 );
             }

@@ -52,13 +52,12 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReviewInfo> findAll(Long lectureId){
+    public List<ReviewResponse> findAll(Long lectureId){
         List<ClassReview> list = classReviewDataRepository.findAll(lectureId);
         if(list.isEmpty()){
             throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
         }
-
-        return ReviewInfo.toList(list);
+        return list.stream().map(ReviewResponse::from).toList();
     }
 
     @Transactional
@@ -204,64 +203,64 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReviewInfo> findByLectureIdOrderByStarLatingDesc(Long lectureId){
+    public List<ReviewResponse> findByLectureIdOrderByStarLatingDesc(Long lectureId){
         Lecture lecture = lectureService.findById(lectureId);
 
         List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByStarLatingDesc(lecture);// desc
         if(result.isEmpty()){
             throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
         }
-        return result.stream().map(ReviewInfo::from).toList();
+        return result.stream().map(ReviewResponse::from).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<ReviewInfo> findByLectureIdOrderByStarLatingAsc(Long lectureId){
+    public List<ReviewResponse> findByLectureIdOrderByStarLatingAsc(Long lectureId){
         Lecture lecture = lectureService.findById(lectureId);
 
         List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByStarLatingAsc(lecture);
         if(result.isEmpty()){
             throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
         }
-        return result.stream().map(ReviewInfo::from).toList();
+        return result.stream().map(ReviewResponse::from).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<ReviewInfo> findByLectureIdOrderByLikesDesc(Long lectureId){
+    public List<ReviewResponse> findByLectureIdOrderByLikesDesc(Long lectureId){
         Lecture lecture = lectureService.findById(lectureId);
         List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByLikesDesc(lecture);
         if(result.isEmpty()){
             throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
         }
 
-        return result.stream().map(ReviewInfo::from).toList();
+        return result.stream().map(ReviewResponse::from).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<ReviewInfo> findByLectureIdOrderByLikesAsc(Long lectureId){
+    public List<ReviewResponse> findByLectureIdOrderByLikesAsc(Long lectureId){
         Lecture lecture = lectureService.findById(lectureId);
         List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByLikesAsc(lecture);
         if(result.isEmpty()){
             throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
         }
-        return result.stream().map(ReviewInfo::from).toList();
+        return result.stream().map(ReviewResponse::from).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<ReviewInfo> findByLectureIdOrderByCreateDateDesc(Long lectureId){
+    public List<ReviewResponse> findByLectureIdOrderByCreateDateDesc(Long lectureId){
         Lecture lecture = lectureService.findById(lectureId);
         List<ClassReview> result = classReviewDataRepository.findAllByLecIdOrderByCreatedDateDesc(lecture);
         if(result.isEmpty()){
             throw new ReviewNotFoundException("수강 후기가 어디에도 없습니다.");
         }
 
-        return result.stream().map(ReviewInfo::from).toList();
+        return result.stream().map(ReviewResponse::from).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<ReviewInfo> getMyReviews(Long userNumber){
+    public List<ReviewResponse> getMyReviews(Long userNumber){
         User user = userService.findById(userNumber);
         List<ClassReview> list = classReviewDataRepository.findAllByUserNumber(user);
-        return list.stream().map(ReviewInfo::from).toList();
+        return list.stream().map(ReviewResponse::from).toList();
     }
 
 }

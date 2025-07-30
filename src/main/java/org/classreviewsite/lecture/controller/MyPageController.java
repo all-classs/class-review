@@ -23,7 +23,7 @@ public class MyPageController {
     @ApiResponse(responseCode = "200", description = "학생의 마이페이지 강의 조회입니다.")
     @ApiResponse(responseCode = "401", description = "해당 학생을 찾을 수 없습니다")
     public Result myPageWithStudent(@RequestParam("userNumber") int userNumber){
-        List<MyPageStudentInfo> response = userClassListService.myPageWithStudent(userNumber);
+        List<MyPageStudentResponse> response = userClassListService.myPageWithStudent(userNumber);
         return new Result<>(200, response, "학생의 마이페이지 강의 조회입니다.");
     }
 

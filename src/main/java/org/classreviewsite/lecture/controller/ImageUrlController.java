@@ -17,7 +17,7 @@ public class ImageUrlController {
 
     @GetMapping("/banner")
     public Result BannerRender(){
-        List<BannerInfo> response = imageUrlService.imageRender();
+        List<BannerResponse> response = imageUrlService.imageRender();
         return new Result(200, response, "배너 이미지 리스트 입니다.");
     }
 

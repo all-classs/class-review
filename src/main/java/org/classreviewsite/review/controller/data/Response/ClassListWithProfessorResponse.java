@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-public class ClassListWithProfessorName {
+public class ClassListWithProfessorResponse {
 
     private Double AverageStarLating;
     private String lectureName;
@@ -27,10 +27,10 @@ public class ClassListWithProfessorName {
     private String professorName;
 
 
-    public static List<ClassListWithProfessorName> from(List<ClassList> classList){
-        List<ClassListWithProfessorName> list = new ArrayList<>();
+    public static List<ClassListWithProfessorResponse> from(List<ClassList> classList){
+        List<ClassListWithProfessorResponse> list = new ArrayList<>();
         for(ClassList Class : classList){
-            list.add(ClassListWithProfessorName.builder()
+            list.add(ClassListWithProfessorResponse.builder()
                     .professorName(Class.getProfessor().getProfessorName())
                     .lectureName(Class.getLecture().getLectureName())
                     .LectureType(Class.getLecture().getLectureType())

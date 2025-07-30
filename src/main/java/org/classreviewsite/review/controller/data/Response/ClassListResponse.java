@@ -8,7 +8,7 @@ import org.classreviewsite.lecture.data.LectureType;
 
 @Data
 @AllArgsConstructor
-public class ClassListInfo {
+public class ClassListResponse {
 
     private Long lectureId;
     private String lectureName;
@@ -20,8 +20,8 @@ public class ClassListInfo {
     private boolean opened;
     private String icon;
 
-    public static ClassListInfo from(ClassList classList){
-        return new ClassListInfo(
+    public static ClassListResponse from(ClassList classList){
+        return new ClassListResponse(
                 classList.getLecture().getLectureId(),
                 classList.getLecture().getLectureName(),
                 classList.getLecture().getDepartment(),

@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import org.classreviewsite.lecture.data.Lecture;
 import org.classreviewsite.lecture.data.Professor;
 
+/**
+ * deprecated
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

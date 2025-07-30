@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 public interface ClassListDataRepository extends JpaRepository<ClassList, Long> {
@@ -28,6 +27,6 @@ public interface ClassListDataRepository extends JpaRepository<ClassList, Long> 
     List<ClassList> findClassListByProfessorName(String professorName);
 
     @Query(value = "select * from ClassList m inner join Lecture on m.lecId = Lecture.lectureId where Lecture.university = :university order by RAND() limit 3", nativeQuery = true)
-    List<RecommendClassInfo> findClassListByUniversityOrderByRandAndLimitThree(@Param("university") String university);
+    List<RecommendClassResponse> findClassListByUniversityOrderByRandAndLimitThree(@Param("university") String university);
 
 }

@@ -1,4 +1,4 @@
-package org.classreviewsite.classlist.data;
+package org.classreviewsite.lecture.infrastructure;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import org.classreviewsite.lecture.data.Lecture;
 import org.classreviewsite.user.infrastructure.User;
 
+/**
+ * deprecated
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

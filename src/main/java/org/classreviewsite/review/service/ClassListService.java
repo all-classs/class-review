@@ -27,23 +27,23 @@ public class ClassListService {
     }
 
     @Transactional(readOnly = true)
-    public List<ClassListInfo> getByUniversity(String university){
+    public List<ClassListResponse> getByUniversity(String university){
             List<ClassList> list = classListDataRepository.findClassListByUniversity(university);
             if(list.isEmpty()){
                 throw new NoSuchElementException("해당 학교의 강의가 존재하지 않습니다.");
             }
-            return list.stream().map(ClassListInfo::from).toList();
+            return list.stream().map(ClassListResponse::from).toList();
     }
 
     @Transactional(readOnly = true)
-    public ClassListWithProfessorName.ClassListWithProfessorNameInDetail detail(Long lectureId){
+    public ClassListWithProfessorResponse.ClassListWithProfessorNameInDetail detail(Long lectureId){
         ClassList classList = classListDataRepository.findByLectureIdWithProfessorName(lectureId).orElseThrow(() -> new LectureNotFoundException("해당 강의가 없습니다."));
-        return ClassListWithProfessorName.ClassListWithProfessorNameInDetail.from(classList);
+        return ClassListWithProfessorResponse.ClassListWithProfessorNameInDetail.from(classList);
     }
 
     @Transactional(readOnly = true)
-    public List<RecommendClassInfo> getRecommend(String university){
-        List<RecommendClassInfo> list = classListDataRepository.findClassListByUniversityOrderByRandAndLimitThree(university);
+    public List<RecommendClassResponse> getRecommend(String university){
+        List<RecommendClassResponse> list = classListDataRepository.findClassListByUniversityOrderByRandAndLimitThree(university);
         return list;
     }
 
