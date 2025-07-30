@@ -20,7 +20,7 @@ public class LectureTest {
 
     @BeforeEach
     void setUp() {
-        lecture = new Lecture(12345L, "강의명", StarRating.createRatingBuilder(), "학과명", "학교명", LectureType.교양선택);
+        lecture = new Lecture(12345L, "강의명", StarRating.createRatingBuilder(), "학과명", "학교명", "교수명", LectureType.교양선택);
     }
 
     @Test
